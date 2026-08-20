@@ -1,0 +1,344 @@
+:root{
+  /* Pulled from the live site's own CSS/markup */
+  --brand-blue: #37bbe4;   /* wp-custom-css button + hero band color */
+  --cream: #F3F3EB;        /* home-new-research / researcher card bg */
+  --ink: #000000;          /* .home-new-wrapper a { color: black } */
+  --ink-soft: #46484c;
+  --white: #ffffff;
+  --footer-dark: #15202B;  /* inferred: reversed/white logo variants imply dark footer */
+  --line: #e3e2d8;
+
+  /* Real SDG goal colors, lifted straight from acf-researcher-goals-style-inline-css */
+  --goal-2: #DDA63A;
+  --goal-3: #4C9F38;
+  --goal-4: #C5192D;
+
+  --display: "Roboto Slab", serif;
+  --body: "Roboto", sans-serif;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+body{
+  font-family: var(--body);
+  color: var(--ink);
+  background: var(--white);
+  -webkit-font-smoothing:antialiased;
+}
+a{ color:inherit; text-decoration:none; }
+img{ max-width:100%; display:block; }
+ul{ list-style:none; }
+button{ font-family:inherit; cursor:pointer; background:none; border:none; }
+:focus-visible{ outline:2px solid var(--brand-blue); outline-offset:2px; }
+
+.wrap{ max-width:1180px; margin:0 auto; padding:0 20px; }
+
+h1,h2,h3,h4,h5,h6{ font-family:var(--display); font-weight:600; }
+
+/* ---------------- Header ---------------- */
+.top-row{
+  display:flex;
+  justify-content:center;
+  padding: 24px 20px 8px;
+}
+.top-row img{ width:280px; }
+
+.nav-row{
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px;
+}
+.nav-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:16px;
+  max-width:1180px;
+  margin:0 auto;
+  padding:0 20px;
+}
+nav.primary{
+  display:flex;
+  gap:28px;
+  align-items:center;
+}
+nav.primary > .nav-item{ position:relative; }
+nav.primary a.top-link{
+  font-size:14px;
+  font-weight:500;
+  text-transform:uppercase;
+  letter-spacing:0.03em;
+  padding:8px 2px;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+}
+nav.primary a.top-link:hover{ color: var(--brand-blue); }
+.caret{ font-size:10px; transition: transform .2s ease; }
+.nav-item:hover .caret{ transform: rotate(180deg); }
+
+.sub-menu{
+  position:absolute;
+  top:100%; left:0;
+  background:var(--white);
+  border:1px solid var(--line);
+  min-width:190px;
+  box-shadow:0 10px 24px rgba(0,0,0,0.08);
+  opacity:0; visibility:hidden; transform:translateY(6px);
+  transition:opacity .18s ease, transform .18s ease, visibility .18s ease;
+  z-index:20;
+}
+.nav-item:hover .sub-menu,
+.nav-item:focus-within .sub-menu{ opacity:1; visibility:visible; transform:none; }
+.sub-menu li a{
+  display:block;
+  padding:10px 16px;
+  font-size:14px;
+}
+.sub-menu li a:hover{ background:var(--cream); }
+
+.btn-outline{
+  display:inline-block;
+  border:2px solid var(--ink);
+  color:var(--ink);
+  padding:10px 20px;
+  font-size:13px;
+  font-weight:500;
+  transition:background .18s ease, color .18s ease, border-color .18s ease;
+}
+.btn-outline:hover{ background:var(--ink); color:var(--white); }
+/* blue text on white was 2.24:1 (fail) — kept the blue border for brand accent,
+   switched the text itself to ink so it reads at 21:1. Hover now fills with
+   ink rather than brand-blue, since white-on-brand-blue also failed (2.24:1). */
+.btn-outline.blue{ border-color:var(--brand-blue); color:var(--ink); }
+.btn-outline.blue:hover{ background:var(--ink); color:var(--white); border-color:var(--ink); }
+
+.btn-solid-white{
+  display:inline-block;
+  background:var(--white);
+  border:1px solid var(--line);
+  padding:12px 26px;
+  font-size:13px;
+  font-weight:500;
+  transition:box-shadow .2s ease;
+}
+.btn-solid-white:hover{ box-shadow:0 4px 14px rgba(0,0,0,0.1); }
+
+.menu-btn{
+  display:none;
+  width:30px; height:22px;
+  position:relative;
+}
+.menu-btn span, .menu-btn span::before, .menu-btn span::after{
+  content:"";
+  position:absolute; left:0; right:0; height:2px;
+  background:var(--ink);
+}
+.menu-btn span{ top:10px; }
+.menu-btn span::before{ top:-8px; }
+.menu-btn span::after{ top:8px; }
+
+.menu-divider{
+  width:100%;
+  height:9px;
+  object-fit:cover;
+  display:block;
+}
+
+/* ---------------- Hero image + cyan mission band ---------------- */
+.hero-image{
+  width:100%;
+  aspect-ratio: 1900 / 573;
+  object-fit:cover;
+  background: linear-gradient(120deg, #cfe9f2, #eef3ee);
+}
+.mission-band{
+  background: var(--brand-blue);
+  color: var(--ink); /* was white — white-on-#37bbe4 is only 2.24:1, fails WCAG AA (needs 4.5:1) */
+  text-align:center;
+  padding: 22px 20px;
+}
+.mission-band p{
+  max-width: 760px;
+  margin: 0 auto;
+  font-size:15px;
+  line-height:1.6;
+  padding:6px 0;
+}
+.mission-band p strong{ font-size:16px; }
+
+/* ---------------- Section shells ---------------- */
+.section-cream{ background: var(--cream); }
+section{ padding: 56px 0; }
+section h2{
+  text-align:center;
+  font-size:26px;
+  margin-bottom: 32px;
+}
+
+.explore-row{
+  display:flex;
+  justify-content:center;
+  gap:16px;
+  flex-wrap:wrap;
+  padding-bottom: 16px;
+}
+
+/* ---------------- New Researchers ---------------- */
+.researchers-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:0;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.researcher-card{
+  background: var(--cream);
+  padding: 30px;
+  text-align:center;
+}
+.researcher-photo-wrap{ display:flex; justify-content:center; margin-bottom:14px; }
+.researcher-photo-wrap img{
+  width:180px; height:180px;
+  object-fit:cover;
+}
+.researcher-card h3{
+  font-size:16px;
+  font-weight:700;
+  max-width:200px;
+  margin: 0 auto 8px;
+  font-family: var(--body);
+}
+.researcher-card .country{
+  font-size:14px;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+.goal-badges{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+}
+.goal-dot{
+  width:34px; height:34px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:11px; font-weight:700;
+  font-family: var(--body);
+}
+/* white numerals fail contrast on the lighter goal colors — dark text where needed */
+.goal-dot[style*="goal-2"]{ color:#000; }  /* amber: black text = 9.6:1, white was 2.2:1 */
+.goal-dot[style*="goal-3"]{ color:#000; }  /* green: black text = 6.3:1, white was 3.3:1 */
+/* goal-4 (red) keeps white text — white on red = 5.9:1, passes */
+
+/* ---------------- Jobs ---------------- */
+.jobs-empty{
+  text-align:center;
+  color: var(--ink-soft);
+  font-size:15px;
+  padding: 30px 0;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.center-btn{ text-align:center; margin-top:26px; }
+
+/* ---------------- Articles ---------------- */
+.articles-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+.article-card figure{
+  aspect-ratio:1;
+  overflow:hidden;
+  margin-bottom:14px;
+  background: var(--cream);
+}
+.article-card img{ width:100%; height:100%; object-fit:cover; }
+.article-card h3{
+  font-size:15px;
+  font-weight:700;
+  font-family: var(--body);
+  line-height:1.4;
+  margin-bottom:8px;
+}
+.article-card time{
+  font-size:12px;
+  color: var(--ink-soft);
+}
+
+/* ---------------- Footer ---------------- */
+footer{
+  background: var(--footer-dark);
+  color: #C9D2DC;
+  padding: 48px 0 0;
+}
+.footer-top{
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 30px;
+  padding-bottom: 40px;
+}
+.footer-top img{ width:200px; }
+.footer-col{ text-align:center; }
+.footer-col p.follow{
+  font-size:13px;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+  margin-bottom: 14px;
+  color:#fff;
+}
+.social-row{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+}
+.social-row a{
+  width:36px; height:36px;
+  border:1px solid #3A4A5C;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px;
+  color:#fff;
+  transition:background .2s ease;
+}
+.social-row a:hover{ background:var(--brand-blue); border-color:var(--brand-blue); }
+.footer-col ul li a{ font-size:14px; }
+.footer-col ul li a:hover{ color:#fff; }
+
+.footer-mid{
+  border-top:1px solid #263340;
+  display:grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  align-items:center;
+  gap:24px;
+  padding: 30px 0;
+  text-align:center;
+}
+.footer-mid img{ margin:0 auto; }
+.footer-mid .badge{ width:80px; }
+.footer-mid .white-logo{ width:180px; }
+.footer-mid p{ font-size:13px; line-height:1.6; color:#9FADBB; }
+
+.footer-bottom{
+  text-align:center;
+  font-size:12px;
+  padding: 18px 0;
+  border-top:1px solid #263340;
+  color:#7C8A98;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ transition:none !important; }
+}
+
+@media (max-width: 900px){
+  .researchers-grid, .articles-grid{ grid-template-columns: 1fr 1fr; }
+  .footer-top, .footer-mid{ grid-template-columns: 1fr; text-align:center; }
+}
+@media (max-width: 700px){
+  nav.primary{ display:none; }
+  .menu-btn{ display:block; }
+  .researchers-grid, .articles-grid{ grid-template-columns: 1fr; }
+  .explore-row{ flex-direction:column; align-items:center; }
+}
