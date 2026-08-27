@@ -35,6 +35,25 @@ button{ font-family:inherit; cursor:pointer; background:none; border:none; }
 
 h1,h2,h3,h4,h5,h6{ font-family:var(--display); font-weight:600; }
 
+/* ---------------- Under-construction banner ---------------- */
+.construction-banner{
+  background: #FFC857;
+  color: #1a1a1a;
+  text-align: center;
+  padding: 12px 20px;
+  font-size: .92rem;
+  line-height: 1.5;
+  border-bottom: 3px solid var(--brand-blue);
+}
+.construction-banner p{ max-width:1180px; margin:0 auto; }
+.construction-banner strong{ letter-spacing:.03em; }
+.construction-banner a{
+  color: #0b4a63;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.construction-banner a:hover{ color: var(--ink); }
+
 /* ---------------- Header ---------------- */
 .top-row{
   display:flex;
