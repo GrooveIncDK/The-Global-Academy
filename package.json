@@ -13,6 +13,7 @@
     "seed": "cross-env NODE_OPTIONS=--no-deprecation tsx src/seed/index.ts",
     "migrate:extract": "python3 migration/extract.py --out migration/extracted",
     "migrate": "cross-env NODE_OPTIONS=--no-deprecation tsx migration/migrate.mjs",
+    "migrate:images": "cross-env NODE_OPTIONS=--no-deprecation tsx migration/import-images.mjs",
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
