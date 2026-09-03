@@ -1,0 +1,175 @@
+[
+  {
+    "wpPostId": 6074,
+    "name": "Low Harm Hedonism",
+    "slug": "low-harm-hedonism",
+    "description": null,
+    "focus": "The Low Harm Hedonism Initiative will develop and validate a new theory that explains, predicts, and elicits pro-environmental conduct among consumers in enjoyment-focused settings. It will challenge the assumption of conventional theories about universal drivers of human behaviour, asserting instead that increased enjoyment or changed infrastructure are needed to boost pro-environmental actions in hedonic contexts.\r\n\r\nThe outcome and benefits will be effective, evidenced-based social interventions that reduce the huge environmental burden of tourism and other enjoyment-focused activities, without reducing customer satisfaction and without financially burdening businesses.\r\n\r\nThis five-year research program is funded by the Australian Research Council’s Laureate Fellowship scheme (project number FL190100143).\r\n\r\nOur research forms part of the <a href=\"http://aibe.uq.edu.au/research/sustainability\">Australian Institute for Business and Economics </a><a href=\"https://aibe.uq.edu.au/research/sustainability\">Sustainability</a> research area and the Business School <a href=\"https://business.uq.edu.au/business-sustainability-initiative\">Business Sustainability Initiative</a>.",
+    "researcherWpIds": [
+      6277,
+      6322,
+      6405,
+      6370,
+      6352,
+      6400,
+      6368,
+      6397,
+      6376,
+      6407,
+      10912,
+      10914,
+      11454
+    ],
+    "mainCountry": "AU",
+    "sdgGoals": [
+      3,
+      6,
+      8,
+      10,
+      11,
+      12,
+      13,
+      17
+    ],
+    "currentResearch": [
+      {
+        "title": "Behaviour change in hedonic contexts",
+        "description": "The Low Harm Hedonism initiative develops and experimentally tests theory-based interventions to trigger pro-environmental behaviour in hedonic contexts without causing additional expenses to businesses and without negatively impacting the consumer experience. Specifically, we investigate the effectiveness of interventions that use increased enjoyment as the tool for behaviour change.",
+        "sdgGoals": [
+          12
+        ],
+        "videos": [
+          {
+            "title": "Designing sustainable tourism",
+            "url": "https://youtu.be/S3U6CjrlZxQ"
+          },
+          {
+            "title": "Reducing plate waste",
+            "url": "https://youtu.be/P5G8MCR5FLo"
+          },
+          {
+            "title": "More fun equals less waste?",
+            "url": "https://youtu.be/kIAQ79DjNlI"
+          },
+          {
+            "title": "To clean or not to clean?",
+            "url": "https://youtu.be/hmpldKoCAG4"
+          },
+          {
+            "title": "Who doesn’t love a free drink?",
+            "url": "https://youtu.be/5ze2qYZlslM"
+          },
+          {
+            "title": "Reusable cotton or single use paper?",
+            "url": "https://youtu.be/2VJEptxm0r4"
+          },
+          {
+            "title": "Does eco certification sell tourism services?",
+            "url": "https://www.youtube.com/watch?v=GJt3VASdR2U&feature=youtu.be"
+          },
+          {
+            "title": "The excuses tourists use to justify environmentally unfriendly behaviours",
+            "url": "https://www.youtube.com/watch?v=oFM-wc6lV-M"
+          },
+          {
+            "title": "The attitude-behaviour gap in sustainable tourism",
+            "url": "https://www.youtube.com/watch?v=1v9n1nHn32U"
+          },
+          {
+            "title": "Can publicly visible pro-environmental initiatives improve the organic environmental image of destinations?",
+            "url": "https://www.youtube.com/watch?v=14rIufP9kNk"
+          }
+        ]
+      },
+      {
+        "title": "The role of habit in tourist behaviour",
+        "description": "Habit as a psychological driver is a significant barrier to behaviour change and a perpetuating factor of existing behaviour. We investigate the role of habit in tourist behaviour, to increase sustainable behaviours and reduce those which are unsustainable.",
+        "sdgGoals": [
+          12
+        ],
+        "videos": [
+          {
+            "title": "The role of habit in tourist behaviour",
+            "url": "https://youtu.be/burA0VegX5g"
+          }
+        ]
+      },
+      {
+        "title": "The role of culture, beliefs, and social norms in influencing behaviour change",
+        "description": "Culture has a significant influence on people’s behaviour in a hedonic environment. We investigate how people from different cultural backgrounds frame their goals during their holidays and design culture-specific interventions to induce pro-environmental behaviour.",
+        "sdgGoals": [
+          12
+        ],
+        "videos": [
+          {
+            "title": "The effect of context and culture on plate waste",
+            "url": "https://www.youtube.com/watch?v=YSqT2U2LwGY"
+          }
+        ]
+      },
+      {
+        "title": "The role of leadership and the barriers leaders face in implementing social interventions",
+        "description": "Researchers have identified several interventions which reduce the environmental footprint and operating cost of hotels. Despite the proven ability of these strategies to create environmental and economic benefits a limited number of hotel managers implement these interventions. We investigate why business leaders are not adopting these interventions.",
+        "sdgGoals": [
+          12
+        ],
+        "videos": []
+      },
+      {
+        "title": "The use of environmentally extended input-output analysis to estimate the carbon emissions caused by tourism businesses and their suppliers",
+        "description": "To assist in emissions reduction efforts, we investigate the use of environmentally extended input-output analysis as a viable approach for tourism businesses to estimate the carbon emissions caused by their activities and suppliers.",
+        "sdgGoals": [
+          12
+        ],
+        "videos": [
+          {
+            "title": "Environmentally extended input-output analysis",
+            "url": "https://youtu.be/ME87VcxFJYc"
+          }
+        ]
+      },
+      {
+        "title": "The environmental and economic impact of tourism | Tourism carbon footprinting",
+        "description": "This area focuses on the interrelationships of tourism, the wider economy and environmental externality. Specifically, we investigate how tourism economic benefits (jobs and income), resource consumption (water and energy), and environmental pollution (greenhouse gas emissions) are interlinked to inform policy intervention for achieving a better net outcome.",
+        "sdgGoals": [
+          12
+        ],
+        "videos": []
+      },
+      {
+        "title": "Promoting plant-based food choices in the tourism and hospitality industry",
+        "description": "One of the most effective ways for consumers to be more environmentally friendly is to reduce their consumption of animal products. However, consumers enjoy the taste of meat and are unwilling to eat a plant-based diet when staying in a hotel or visiting a restaurant. We investigate interventions to promote plant-based food choices in the tourism and hospitality industry.",
+        "sdgGoals": [
+          12
+        ],
+        "videos": [
+          {
+            "title": "Carbon emission levels on food menus",
+            "url": "https://youtu.be/vO8qUL5-djo"
+          }
+        ]
+      },
+      {
+        "title": "Leveraging disruption for more environmentally sustainable tourism",
+        "description": "Disruption to the tourism industry can be caused by natural disasters (e.g., COVID-19) or by human intervention. We investigate how we could leverage these events to disrupt people’s normal travel habits and create a more environmentally sustainable tourism industry.",
+        "sdgGoals": [
+          12
+        ],
+        "videos": [
+          {
+            "title": "Can disasters improve the tourism industry?",
+            "url": "https://www.youtube.com/watch?v=qLaoc-J0cug"
+          }
+        ]
+      }
+    ],
+    "video": "https://youtu.be/f41FgN1TCzw",
+    "universityLogoSourceUrl": "https://theglobalacademy.ac/wp-content/uploads/2021/04/uq-logo-p4n5arqa3gz9bce34aj94fbzwpbj8gs7rjuaytujb0.jpg",
+    "groupPhotoSourceUrl": "https://theglobalacademy.ac/wp-content/uploads/2021/04/ARC-Laureate-Fellowship_9116_HR-min2-1024x482-2.jpg",
+    "groupMap": "6634",
+    "facebook": "https://www.facebook.com/lowharmhedonism",
+    "twitter": "https://twitter.com/lowharmhedonism",
+    "linkedin": null,
+    "wikipedia": null
+  }
+]
