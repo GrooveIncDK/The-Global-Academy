@@ -15,7 +15,7 @@ async function run() {
   const payload = await getPayload({ config: payloadConfig })
 
   payload.logger.info('Seeding SDG goals...')
-  const goalIdByNumber = new Map<number, number | string>()
+  const goalIdByNumber = new Map<number, number>()
 
   for (const goal of sdgGoals) {
     const existing = await payload.find({
