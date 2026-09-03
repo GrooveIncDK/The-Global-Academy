@@ -51,6 +51,11 @@ export default buildConfig({
     Pages,
   ],
   editor: lexicalEditor(),
+  // Wide open for local development so the static frontend (opened straight from
+  // disk, or served from any port) can call the read-only public endpoints —
+  // researchers/jobs/posts already gate what's returned via each collection's own
+  // access control, so this doesn't expose anything private. Narrow this to your
+  // real frontend's origin(s) before this ever goes on the public internet.
   cors: '*',
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -59,6 +64,14 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
+      // On Vercel each serverless function instance gets its own connection
+      // pool, and there can be many instances running concurrently. Keeping
+      // each instance's pool tiny (paired with a transaction-mode pooler
+      // such as Supabase's Supavisor on port 6543, NOT the session-mode
+      // pooler on 5432) keeps total connection usage low regardless of how
+      // many instances Vercel spins up. Locally there's only ever one
+      // process, so a larger pool is fine and faster under load.
+      max: process.env.VERCEL ? 1 : 10,
     },
   }),
   sharp,
