@@ -7,6 +7,9 @@ import { getCurrentUser } from '../lib/getCurrentUser'
 import { ProfileForm } from './ProfileForm'
 
 export const metadata = { title: 'My dashboard — The Global Academy' }
+// See the comment on this same line in page.tsx — same build-time-hang risk,
+// same fix, since this route also queries Postgres directly.
+export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
   const user = await getCurrentUser()

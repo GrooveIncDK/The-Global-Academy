@@ -28,21 +28,39 @@ export function Header({ user }: { user: CurrentUser }) {
                   Home
                 </Link>
               </div>
-              <div className="nav-item">
-                <Link href="/#researchers" className="top-link">
-                  Researchers
-                </Link>
-              </div>
+
+              <details className="nav-dropdown">
+                <summary>About</summary>
+                <div className="nav-dropdown-panel">
+                  <Link href="/news">News</Link>
+                  <Link href="/about/gallery">Gallery</Link>
+                  <Link href="/about/team">Meet the team</Link>
+                  <Link href="/about/goals">Goals and targets</Link>
+                </div>
+              </details>
+
+              <details className="nav-dropdown">
+                <summary>Explore</summary>
+                <div className="nav-dropdown-panel">
+                  <Link href="/explore/researchers">Researchers</Link>
+                  <Link href="/explore/research-groups">Research groups</Link>
+                  <Link href="/about/goals">Goals and targets</Link>
+                  <Link href="/about/sdgs-workshops">SDGs Workshops</Link>
+                </div>
+              </details>
+
               <div className="nav-item">
                 <Link href="/#jobs" className="top-link">
                   Jobs
                 </Link>
               </div>
+
               <div className="nav-item">
-                <Link href="/#news" className="top-link">
-                  News
+                <Link href="/contact" className="top-link">
+                  Contact
                 </Link>
               </div>
+
               {!user && (
                 <div className="nav-item">
                   <Link href="/login" className="top-link">

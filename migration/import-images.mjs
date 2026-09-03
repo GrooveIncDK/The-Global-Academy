@@ -199,6 +199,50 @@ async function attachImage(payload, { collection, where, field, sourceUrl, altTe
   }
 }
 
+/** Gallery events store an array of { image, sourceUrl, caption } items, unlike
+ * the single-field pattern attachImage() handles — each doc can need several
+ * uploads across several array entries, and Payload replaces an array field
+ * wholesale on update, so the whole array is re-sent with only the missing
+ * `image` entries filled in. */
+async function attachGalleryPhotos(payload) {
+  const events = await payload.find({ collection: 'gallery-events', limit: 200, depth: 0 })
+  for (const event of events.docs) {
+    const photos = event.photos || []
+    let changed = false
+
+    for (const photo of photos) {
+      if (photo.image || !relPathFromSourceUrl(photo.sourceUrl)) {
+        if (!photo.image && !relPathFromSourceUrl(photo.sourceUrl)) stats.noSourceUrl += 1
+        continue
+      }
+
+      let relPath
+      try {
+        relPath = resolveExistingRelPath(photo.sourceUrl)
+        const mediaId = relPath
+          ? await ensureMediaForRelPath(payload, relPath, photo.caption || `${event.title} photo`)
+          : null
+        if (!mediaId) {
+          stats.missingFile += 1
+          continue
+        }
+        photo.image = mediaId
+        changed = true
+        stats.uploaded += 1
+      } catch (err) {
+        stats.errors += 1
+        payload.logger.error(`  [gallery-event:${event.slug}] failed on ${relPath ?? photo.sourceUrl}: ${err.message}`)
+      }
+    }
+
+    if (changed) {
+      await payload.update({ collection: 'gallery-events', id: event.id, data: { photos } })
+    } else if (photos.length > 0 && photos.every((p) => p.image)) {
+      stats.alreadySet += 1
+    }
+  }
+}
+
 async function main() {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
@@ -255,6 +299,9 @@ async function main() {
       label: `research-group:${g.slug}:groupPhoto`,
     })
   }
+
+  // --- Gallery events: photos[].sourceUrl -> photos[].image ---
+  await attachGalleryPhotos(payload)
 
   log('Image import complete.')
   log(

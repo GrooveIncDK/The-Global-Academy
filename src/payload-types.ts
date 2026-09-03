@@ -80,6 +80,7 @@ export interface Config {
     'post-categories': PostCategory;
     'team-members': TeamMember;
     pages: Page;
+    'gallery-events': GalleryEvent;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -100,6 +101,7 @@ export interface Config {
     'post-categories': PostCategoriesSelect<false> | PostCategoriesSelect<true>;
     'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
+    'gallery-events': GalleryEventsSelect<false> | GalleryEventsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -817,6 +819,40 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery-events".
+ */
+export interface GalleryEvent {
+  id: number;
+  title: string;
+  /**
+   * Used as a stable id/anchor for this event on the gallery page
+   */
+  slug: string;
+  /**
+   * Section heading this event is grouped under, e.g. "2030 SDGs simulation workshops"
+   */
+  category?: string | null;
+  description?: string | null;
+  photos?:
+    | {
+        image?: (number | null) | Media;
+        /**
+         * Original image URL from WordPress — see Researchers.photoSourceUrl
+         */
+        sourceUrl?: string | null;
+        /**
+         * Used as the image alt text
+         */
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -890,6 +926,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'pages';
         value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'gallery-events';
+        value: number | GalleryEvent;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1244,6 +1284,27 @@ export interface PagesSelect<T extends boolean = true> {
   slug?: T;
   title?: T;
   content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery-events_select".
+ */
+export interface GalleryEventsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  category?: T;
+  description?: T;
+  photos?:
+    | T
+    | {
+        image?: T;
+        sourceUrl?: T;
+        caption?: T;
+        id?: T;
+      };
+  sortOrder?: T;
   updatedAt?: T;
   createdAt?: T;
 }

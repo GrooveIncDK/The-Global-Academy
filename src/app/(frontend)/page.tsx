@@ -5,6 +5,19 @@ import config from '@/payload.config'
 import type { Job, Post, Researcher, SdgGoal, SdgTarget } from '@/payload-types'
 import { PLACEHOLDER_PHOTO, contrastTextColor, countryName } from './lib/display'
 
+// This page queries Postgres on every request (researchers/jobs/posts change
+// often, so a stale build-time snapshot isn't acceptable). Without this,
+// Next.js still tries to prerender it once during `next build` to check
+// whether it CAN be static — that trial render runs the real Payload query
+// against production Postgres, and if that connection is ever slow (a
+// paused/cold database, a pooler under load, network hiccup between the
+// build machine and Supabase), the build hangs until Vercel's per-page
+// timeout kills it, retries twice more, then fails the whole deployment.
+// force-dynamic skips that build-time attempt entirely — this route is
+// server-rendered per-request only, which is what it already behaved like
+// at runtime (see the route table: `ƒ /`), just without the risky preview.
+export const dynamic = 'force-dynamic'
+
 function ResearcherCard({ r }: { r: Researcher }) {
   const photo = r.photoSourceUrl || PLACEHOLDER_PHOTO
   const goals = new Map<number, string | null | undefined>()
@@ -112,7 +125,7 @@ export default async function HomePage() {
             <a href="#researchers" className="btn-outline blue">
               Researchers
             </a>
-            <a href="#" className="btn-outline blue">
+            <a href="/about/sdgs-workshops" className="btn-outline blue">
               SDGs Workshops
             </a>
             <a href="#jobs" className="btn-outline blue">

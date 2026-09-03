@@ -18,6 +18,7 @@ import { PostCategories } from './collections/PostCategories'
 import { Posts } from './collections/Posts'
 import { TeamMembers } from './collections/TeamMembers'
 import { Pages } from './collections/Pages'
+import { GalleryEvents } from './collections/GalleryEvents'
 import { jobsBoardStripePlugin } from './plugins/stripe'
 
 const filename = fileURLToPath(import.meta.url)
@@ -49,6 +50,7 @@ export default buildConfig({
     PostCategories,
     TeamMembers,
     Pages,
+    GalleryEvents,
   ],
   editor: lexicalEditor(),
   // Wide open for local development so the static frontend (opened straight from
@@ -72,6 +74,12 @@ export default buildConfig({
       // many instances Vercel spins up. Locally there's only ever one
       // process, so a larger pool is fine and faster under load.
       max: process.env.VERCEL ? 1 : 10,
+      // pg's default is 0 (wait forever). If Postgres is ever slow to accept
+      // a connection — a cold/paused database, a pooler under load, a network
+      // hiccup — this makes it fail fast with a clear error instead of hanging
+      // until something else's timeout (e.g. Vercel's 60s per-page build
+      // timeout) kills it after minutes of silence.
+      connectionTimeoutMillis: 10_000,
     },
   }),
   sharp,
