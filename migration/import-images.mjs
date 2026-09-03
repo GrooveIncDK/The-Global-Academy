@@ -21,7 +21,7 @@
  */
 import 'dotenv/config'
 import { readFile } from 'node:fs/promises'
-import { existsSync } from 'node:fs'
+import { existsSync, readdirSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { getPayload } from 'payload'
@@ -47,7 +47,7 @@ async function loadJSON(name) {
 }
 
 /** Turns a WordPress attachment URL into the relative path under
- * migration/images/ where the matching file should live, e.g.
+ * IMAGES_ROOT where the matching file should live, e.g.
  * "https://theglobalacademy.ac/wp-content/uploads/2022/05/x.jpg" ->
  * "2022/05/x.jpg". Returns null for anything that isn't a WP upload URL. */
 function relPathFromSourceUrl(url) {
@@ -56,6 +56,76 @@ function relPathFromSourceUrl(url) {
   const idx = url.indexOf(marker)
   if (idx === -1) return null
   return decodeURIComponent(url.slice(idx + marker.length))
+}
+
+/** WordPress (and various export/resize plugins) commonly save an image
+ * under a different filename than the one referenced elsewhere on the site —
+ * a "-150x150"/"-1024x682" generated thumbnail size, a "-scaled" downsize, or
+ * an "-aspect-ratio-1-1" custom crop. If the exact relPath isn't present,
+ * this looks in the same directory for another file whose name — once those
+ * known suffixes are stripped — matches, and falls back to that. Returns the
+ * relPath of the best match, or null if nothing in that directory matches. */
+const dirListingCache = new Map()
+function stripKnownSuffixes(stem) {
+  const patterns = [
+    /-aspect-ratio-\d+-\d+$/i,
+    /-scaled$/i,
+    /-\d+x\d+$/,
+    /-e\d{10,}$/,
+    /-copy$/i,
+    /-\d+$/,
+  ]
+  let changed = true
+  while (changed) {
+    changed = false
+    for (const p of patterns) {
+      const next = stem.replace(p, '')
+      if (next !== stem) {
+        stem = next
+        changed = true
+      }
+    }
+  }
+  return stem
+}
+function findFallback(relPath) {
+  const dir = path.dirname(relPath)
+  const base = path.basename(relPath)
+  const ext = path.extname(base)
+  const stem = base.slice(0, base.length - ext.length)
+  const reduced = stripKnownSuffixes(stem)
+  if (reduced.length <= 3) return null
+
+  const dirAbs = path.join(IMAGES_ROOT, dir)
+  if (!dirListingCache.has(dirAbs)) {
+    try {
+      dirListingCache.set(dirAbs, readdirSync(dirAbs))
+    } catch {
+      dirListingCache.set(dirAbs, [])
+    }
+  }
+  const candidates = dirListingCache
+    .get(dirAbs)
+    .filter((fn) => fn.toLowerCase().startsWith(reduced.toLowerCase()))
+  if (candidates.length === 0) return null
+  // Prefer same extension, then the shortest name (closest to the original).
+  candidates.sort((a, b) => {
+    const aExt = path.extname(a).toLowerCase() === ext.toLowerCase() ? 0 : 1
+    const bExt = path.extname(b).toLowerCase() === ext.toLowerCase() ? 0 : 1
+    if (aExt !== bExt) return aExt - bExt
+    return a.length - b.length
+  })
+  return path.join(dir, candidates[0])
+}
+
+/** Resolves a *SourceUrl to a relPath that actually exists on disk under
+ * IMAGES_ROOT, trying the exact expected path first and a same-directory
+ * fallback match second. Returns null if nothing usable is found. */
+function resolveExistingRelPath(sourceUrl) {
+  const relPath = relPathFromSourceUrl(sourceUrl)
+  if (!relPath) return null
+  if (existsSync(path.join(IMAGES_ROOT, relPath))) return relPath
+  return findFallback(relPath)
 }
 
 const stats = { uploaded: 0, alreadySet: 0, missingFile: 0, noSourceUrl: 0, errors: 0 }
@@ -97,8 +167,7 @@ async function ensureMediaForRelPath(payload, relPath, altText) {
  * stale DB copy) so this stays correct even before migrate.mjs has run
  * again. */
 async function attachImage(payload, { collection, where, field, sourceUrl, altText, label }) {
-  const relPath = relPathFromSourceUrl(sourceUrl)
-  if (!relPath) {
+  if (!relPathFromSourceUrl(sourceUrl)) {
     stats.noSourceUrl += 1
     return
   }
@@ -114,8 +183,10 @@ async function attachImage(payload, { collection, where, field, sourceUrl, altTe
     return
   }
 
+  let relPath
   try {
-    const mediaId = await ensureMediaForRelPath(payload, relPath, altText)
+    relPath = resolveExistingRelPath(sourceUrl)
+    const mediaId = relPath ? await ensureMediaForRelPath(payload, relPath, altText) : null
     if (!mediaId) {
       stats.missingFile += 1
       return
@@ -124,7 +195,7 @@ async function attachImage(payload, { collection, where, field, sourceUrl, altTe
     stats.uploaded += 1
   } catch (err) {
     stats.errors += 1
-    payload.logger.error(`  [${label}] failed on ${relPath}: ${err.message}`)
+    payload.logger.error(`  [${label}] failed on ${relPath ?? sourceUrl}: ${err.message}`)
   }
 }
 
