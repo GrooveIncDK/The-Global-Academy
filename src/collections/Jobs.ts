@@ -12,6 +12,47 @@ const JOB_TYPES = [
   { label: 'Temporary', value: 'temporary' },
 ]
 
+// Source: ACF "sector" field on job_listing — an academic-subject facet, distinct from the
+// job_listing_category taxonomy (which is actually used for SDG goal tagging — see sdgGoals below).
+const SECTORS = [
+  'Agriculture And Veterinary Sciences',
+  'Art And Design',
+  'Arts And Humanities',
+  'Biology',
+  'Business And Management',
+  'Chemistry',
+  'Clinical',
+  'Computer Science',
+  'Economics And Finance',
+  'Education',
+  'Engineering',
+  'Food Sciences',
+  'Geography And Environmental Sciences',
+  'Health And Medical',
+  'Law',
+  'Marine Sciences',
+  'Materials Sciences',
+  'Mathematics',
+  'Physics',
+  'Social Sciences',
+  'Sports Sciences',
+  'Statistics',
+].map((label) => ({ label, value: label.toLowerCase().replace(/\s+/g, '_') }))
+
+// Source: ACF "academic_staff__faculty_roles" — free multi-select of role labels
+const FACULTY_ROLES = [
+  'Research Assistant',
+  'Research Associate/Fellow',
+  'Postdoc',
+  'Lecturer',
+  'Senior Lecturer',
+  'Associate/Assistant Professor',
+  'Professor',
+  'Head Of School/Dept/Research Centre',
+  'Engineer',
+  'Phd Studentship',
+].map((label) => ({ label, value: label.toLowerCase().replace(/[^a-z0-9]+/g, '_') }))
+
 export const Jobs: CollectionConfig = {
   slug: 'jobs',
   admin: {
@@ -60,6 +101,24 @@ export const Jobs: CollectionConfig = {
       type: 'row',
       fields: [
         {
+          name: 'employerType',
+          type: 'text',
+          admin: {
+            width: '50%',
+            description: 'ACF "employer_type" — almost always "Universities" in the source data',
+          },
+        },
+        {
+          name: 'employerPage',
+          type: 'text',
+          admin: { width: '50%', description: 'Link to the employer\'s institution/profile page' },
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
           name: 'location',
           type: 'text',
           admin: { width: '50%' },
@@ -77,6 +136,31 @@ export const Jobs: CollectionConfig = {
       type: 'select',
       hasMany: true,
       options: JOB_TYPES,
+    },
+    {
+      name: 'academicStaffFacultyRoles',
+      type: 'select',
+      hasMany: true,
+      options: FACULTY_ROLES,
+      admin: { description: 'ACF "academic_staff__faculty_roles"' },
+    },
+    {
+      name: 'sector',
+      type: 'select',
+      hasMany: true,
+      options: SECTORS,
+      admin: { description: 'Academic subject area(s) — ACF "sector"' },
+    },
+    {
+      name: 'sdgGoals',
+      type: 'relationship',
+      relationTo: 'sdg-goals',
+      hasMany: true,
+      admin: {
+        description:
+          'From the job_listing_category taxonomy, which on this site is used for SDG goal tagging ' +
+          '("Goal 01 No Poverty", etc.), not a generic job category',
+      },
     },
     {
       name: 'description',
@@ -99,8 +183,34 @@ export const Jobs: CollectionConfig = {
       ],
     },
     {
+      name: 'jobReference',
+      type: 'text',
+      admin: { description: 'Employer\'s own internal reference/req ID for the vacancy' },
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'salaryText',
+          type: 'text',
+          admin: { width: '40%', description: 'WP Job Manager "_job_salary" — free text, e.g. "39,105 - 46,485"' },
+        },
+        {
+          name: 'salaryCurrency',
+          type: 'text',
+          admin: { width: '30%', description: 'e.g. "UKP", "AUD", "USD" — legacy codes, not always ISO 4217' },
+        },
+        {
+          name: 'salaryUnit',
+          type: 'text',
+          admin: { width: '30%', description: 'e.g. "YEAR"' },
+        },
+      ],
+    },
+    {
       name: 'expiresAt',
       type: 'date',
+      admin: { description: 'WP Job Manager "_job_expires"' },
     },
     {
       name: 'sdgTargets',
