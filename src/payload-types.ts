@@ -202,17 +202,48 @@ export interface Researcher {
    * "Ms", "Dr", "Prof", etc.
    */
   title?: string | null;
+  firstNames?: string | null;
+  lastName?: string | null;
+  /**
+   * Post-nominal letters, e.g. "PhD FHEA" — free text in the source, quality varies
+   */
+  abbreviations?: string | null;
+  /**
+   * Display name used across the directory and as the admin title
+   */
   fullName: string;
   /**
    * e.g. "Educational Scientist"
    */
   position?: string | null;
+  /**
+   * ACF repeater "additional_job_title" — extra roles beyond the primary position
+   */
+  additionalJobTitles?:
+    | {
+        title?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   institution?: (number | null) | Institution;
+  /**
+   * Free-text current employer, used when it differs from the linked institution
+   */
+  currentPlaceOfWork?: string | null;
   photo?: (number | null) | Media;
+  /**
+   * Original image URL from the WordPress export — filled in by the data migration, left for a later image-import pass to download and attach as the real "photo" upload. Safe to ignore once photo is set.
+   */
+  photoSourceUrl?: string | null;
   /**
    * ISO 3166-1 alpha-2, e.g. "CN" — feeds the country filter on the directory
    */
   countryCode?: string | null;
+  /**
+   * ISO alpha-2 where available — source data has some non-conforming legacy values
+   */
+  additionalCountry1?: string | null;
+  additionalCountry2?: string | null;
   languages?: string[] | null;
   researchFocus?: {
     root: {
@@ -229,7 +260,6 @@ export interface Researcher {
     };
     [k: string]: unknown;
   } | null;
-  researchGroups?: (number | ResearchGroup)[] | null;
   /**
    * Which UN SDG targets this researcher's work maps to — feeds the goal filter and badges
    */
@@ -241,6 +271,94 @@ export interface Researcher {
         id?: string | null;
       }[]
     | null;
+  researchGroupName?: string | null;
+  researchGroupUrl?: string | null;
+  additionalResearchGroups?:
+    | {
+        name?: string | null;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Free-text list of publications/citations
+   */
+  citations?: string | null;
+  phdsSupervised?: number | null;
+  phdSupervisorName?: string | null;
+  /**
+   * Free text in the source, not a real date — mostly a bare year ("2024") or the literal status "phd-completed"
+   */
+  phdCompletionDate?: string | null;
+  professionalOrganisation?: string | null;
+  additionalOrganisations?:
+    | {
+        name?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Facebook
+   */
+  facebook?: string | null;
+  /**
+   * Twitter/X
+   */
+  twitter?: string | null;
+  /**
+   * LinkedIn
+   */
+  linkedin?: string | null;
+  /**
+   * Google Scholar
+   */
+  googleScholar?: string | null;
+  /**
+   * ResearchGate
+   */
+  researchGate?: string | null;
+  /**
+   * Mendeley
+   */
+  mendeley?: string | null;
+  /**
+   * Wikipedia
+   */
+  wikipedia?: string | null;
+  /**
+   * Bluesky
+   */
+  bluesky?: string | null;
+  /**
+   * Mastodon
+   */
+  mastodon?: string | null;
+  /**
+   * Threads
+   */
+  threads?: string | null;
+  /**
+   * ACF "other_social_1" – "other_social_3"
+   */
+  otherSocialLinks?:
+    | {
+        label?: string | null;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * YouTube/Vimeo profile video
+   */
+  videoUrl?: string | null;
+  /**
+   * ACF Google Map field, raw value — populated on only 2 of ~700 profiles in the source data and both values look like attachment/post IDs rather than coordinates, so this is kept as plain text rather than a geo field until that's understood. Safe to ignore for most profiles.
+   */
+  location?: string | null;
+  /**
+   * "Trailblazer" spotlight flag — clean Yes/No field in the source (38 Yes / 681 No)
+   */
+  trailblazer?: boolean | null;
   /**
    * Unpublish instead of delete to preserve edit history
    */
@@ -259,19 +377,71 @@ export interface Institution {
    * Used in researcher profile URLs, e.g. /humboldt-universitity-zu-berlin/ms-xiaoxiao-qian/
    */
   slug: string;
+  motto?: string | null;
+  logo?: (number | null) | Media;
+  /**
+   * Original logo URL from WordPress — see Researchers.photoSourceUrl
+   */
+  logoSourceUrl?: string | null;
+  /**
+   * City/country as free text — source is a plain ACF text field, not a map
+   */
+  location?: string | null;
+  /**
+   * ACF "url" — the institution's own homepage
+   */
   websiteUrl?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "research-groups".
- */
-export interface ResearchGroup {
-  id: number;
-  name: string;
-  slug: string;
-  description?: string | null;
+  /**
+   * Link to this institution's jobs/listings on the source site
+   */
+  listingsUrl?: string | null;
+  rootUrl?: string | null;
+  awards?: string | null;
+  rankings?: string | null;
+  /**
+   * ACF "key_facts"
+   */
+  keyFacts?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * ACF "institution_main_text" — the institution's profile-page body copy
+   */
+  mainText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Legacy WP shortcode embedded on the institution page ("search_shortcode") — kept for reference only, has no equivalent in the headless frontend
+   */
+  searchShortcode?: string | null;
+  /**
+   * Currency used when this institution posts paid job listings, e.g. "GBP"
+   */
+  jobListingCurrency?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -323,6 +493,85 @@ export interface SdgGoal {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "research-groups".
+ */
+export interface ResearchGroup {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string | null;
+  /**
+   * ACF "research_group_focus" — the group's mission/overview copy
+   */
+  focus?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  researchers?: (number | Researcher)[] | null;
+  /**
+   * ISO 3166-1 alpha-2, e.g. "AU"
+   */
+  mainCountry?: string | null;
+  /**
+   * ACF "goals" repeater on the group
+   */
+  sdgGoals?: (number | SdgGoal)[] | null;
+  /**
+   * ACF "current_research" repeater
+   */
+  currentResearch?:
+    | {
+        title?: string | null;
+        description?: string | null;
+        sdgGoals?: (number | SdgGoal)[] | null;
+        videos?:
+          | {
+              title?: string | null;
+              url?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * ACF "research_group_video" — a single overview video for the group
+   */
+  video?: string | null;
+  universityLogo?: (number | null) | Media;
+  /**
+   * Original URL from WordPress — see Researchers.photoSourceUrl
+   */
+  universityLogoSourceUrl?: string | null;
+  groupPhoto?: (number | null) | Media;
+  /**
+   * Original URL from WordPress — see Researchers.photoSourceUrl
+   */
+  groupPhotoSourceUrl?: string | null;
+  /**
+   * ACF Google Map field, raw value — rarely populated, kept as plain text (see Researchers.location)
+   */
+  groupMap?: string | null;
+  facebook?: string | null;
+  twitter?: string | null;
+  linkedin?: string | null;
+  wikipedia?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "jobs".
  */
 export interface Job {
@@ -331,10 +580,68 @@ export interface Job {
   title: string;
   slug: string;
   companyName: string;
+  /**
+   * ACF "employer_type" — almost always "Universities" in the source data
+   */
+  employerType?: string | null;
+  /**
+   * Link to the employer's institution/profile page
+   */
+  employerPage?: string | null;
   location?: string | null;
   isRemote?: boolean | null;
   jobTypes?:
     ('fixed_term' | 'freelance' | 'full_time' | 'internship' | 'part_time' | 'permanent' | 'temporary')[] | null;
+  /**
+   * ACF "academic_staff__faculty_roles"
+   */
+  academicStaffFacultyRoles?:
+    | (
+        | 'research_assistant'
+        | 'research_associate_fellow'
+        | 'postdoc'
+        | 'lecturer'
+        | 'senior_lecturer'
+        | 'associate_assistant_professor'
+        | 'professor'
+        | 'head_of_school_dept_research_centre'
+        | 'engineer'
+        | 'phd_studentship'
+      )[]
+    | null;
+  /**
+   * Academic subject area(s) — ACF "sector"
+   */
+  sector?:
+    | (
+        | 'agriculture_and_veterinary_sciences'
+        | 'art_and_design'
+        | 'arts_and_humanities'
+        | 'biology'
+        | 'business_and_management'
+        | 'chemistry'
+        | 'clinical'
+        | 'computer_science'
+        | 'economics_and_finance'
+        | 'education'
+        | 'engineering'
+        | 'food_sciences'
+        | 'geography_and_environmental_sciences'
+        | 'health_and_medical'
+        | 'law'
+        | 'marine_sciences'
+        | 'materials_sciences'
+        | 'mathematics'
+        | 'physics'
+        | 'social_sciences'
+        | 'sports_sciences'
+        | 'statistics'
+      )[]
+    | null;
+  /**
+   * From the job_listing_category taxonomy, which on this site is used for SDG goal tagging ("Goal 01 No Poverty", etc.), not a generic job category
+   */
+  sdgGoals?: (number | SdgGoal)[] | null;
   description: {
     root: {
       type: string;
@@ -352,6 +659,25 @@ export interface Job {
   };
   applicationUrl?: string | null;
   applicationEmail?: string | null;
+  /**
+   * Employer's own internal reference/req ID for the vacancy
+   */
+  jobReference?: string | null;
+  /**
+   * WP Job Manager "_job_salary" — free text, e.g. "39,105 - 46,485"
+   */
+  salaryText?: string | null;
+  /**
+   * e.g. "UKP", "AUD", "USD" — legacy codes, not always ISO 4217
+   */
+  salaryCurrency?: string | null;
+  /**
+   * e.g. "YEAR"
+   */
+  salaryUnit?: string | null;
+  /**
+   * WP Job Manager "_job_expires"
+   */
   expiresAt?: string | null;
   sdgTargets?: (number | SdgTarget)[] | null;
   priceTier?: (number | null) | PricingTier;
@@ -656,14 +982,26 @@ export interface ResearchersSelect<T extends boolean = true> {
   user?: T;
   slug?: T;
   title?: T;
+  firstNames?: T;
+  lastName?: T;
+  abbreviations?: T;
   fullName?: T;
   position?: T;
+  additionalJobTitles?:
+    | T
+    | {
+        title?: T;
+        id?: T;
+      };
   institution?: T;
+  currentPlaceOfWork?: T;
   photo?: T;
+  photoSourceUrl?: T;
   countryCode?: T;
+  additionalCountry1?: T;
+  additionalCountry2?: T;
   languages?: T;
   researchFocus?: T;
-  researchGroups?: T;
   sdgTargets?: T;
   projects?:
     | T
@@ -672,6 +1010,46 @@ export interface ResearchersSelect<T extends boolean = true> {
         description?: T;
         id?: T;
       };
+  researchGroupName?: T;
+  researchGroupUrl?: T;
+  additionalResearchGroups?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        id?: T;
+      };
+  citations?: T;
+  phdsSupervised?: T;
+  phdSupervisorName?: T;
+  phdCompletionDate?: T;
+  professionalOrganisation?: T;
+  additionalOrganisations?:
+    | T
+    | {
+        name?: T;
+        id?: T;
+      };
+  facebook?: T;
+  twitter?: T;
+  linkedin?: T;
+  googleScholar?: T;
+  researchGate?: T;
+  mendeley?: T;
+  wikipedia?: T;
+  bluesky?: T;
+  mastodon?: T;
+  threads?: T;
+  otherSocialLinks?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  videoUrl?: T;
+  location?: T;
+  trailblazer?: T;
   isPublished?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -683,7 +1061,19 @@ export interface ResearchersSelect<T extends boolean = true> {
 export interface InstitutionsSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
+  motto?: T;
+  logo?: T;
+  logoSourceUrl?: T;
+  location?: T;
   websiteUrl?: T;
+  listingsUrl?: T;
+  rootUrl?: T;
+  awards?: T;
+  rankings?: T;
+  keyFacts?: T;
+  mainText?: T;
+  searchShortcode?: T;
+  jobListingCurrency?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -695,6 +1085,35 @@ export interface ResearchGroupsSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
   description?: T;
+  focus?: T;
+  researchers?: T;
+  mainCountry?: T;
+  sdgGoals?: T;
+  currentResearch?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        sdgGoals?: T;
+        videos?:
+          | T
+          | {
+              title?: T;
+              url?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  video?: T;
+  universityLogo?: T;
+  universityLogoSourceUrl?: T;
+  groupPhoto?: T;
+  groupPhotoSourceUrl?: T;
+  groupMap?: T;
+  facebook?: T;
+  twitter?: T;
+  linkedin?: T;
+  wikipedia?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -732,12 +1151,21 @@ export interface JobsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   companyName?: T;
+  employerType?: T;
+  employerPage?: T;
   location?: T;
   isRemote?: T;
   jobTypes?: T;
+  academicStaffFacultyRoles?: T;
+  sector?: T;
+  sdgGoals?: T;
   description?: T;
   applicationUrl?: T;
   applicationEmail?: T;
+  jobReference?: T;
+  salaryText?: T;
+  salaryCurrency?: T;
+  salaryUnit?: T;
   expiresAt?: T;
   sdgTargets?: T;
   priceTier?: T;
