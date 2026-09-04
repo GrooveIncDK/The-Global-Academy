@@ -66,14 +66,21 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
-      // On Vercel each serverless function instance gets its own connection
-      // pool, and there can be many instances running concurrently. Keeping
-      // each instance's pool tiny (paired with a transaction-mode pooler
-      // such as Supabase's Supavisor on port 6543, NOT the session-mode
-      // pooler on 5432) keeps total connection usage low regardless of how
-      // many instances Vercel spins up. Locally there's only ever one
-      // process, so a larger pool is fine and faster under load.
-      max: process.env.VERCEL ? 1 : 10,
+      // max:1 was wrong. It assumed the old serverless model — one request
+      // per instance, many isolated instances — where a tiny pool per
+      // instance keeps total connections low. Vercel's current default
+      // execution model (Fluid Compute) lets ONE warm instance serve several
+      // concurrent requests, all sharing this same pool. With max:1, the
+      // second concurrent request has to wait for the first query to finish
+      // and release the connection; if that wait exceeds
+      // connectionTimeoutMillis, pg throws the exact "timeout exceeded when
+      // trying to connect" error this was doing in production — not a real
+      // network/DB problem, just every request serializing through one
+      // connection. A transaction-mode pooler (Supabase Supavisor on port
+      // 6543 — NOT the session-mode pooler on 5432) is built to handle many
+      // short-lived connections cheaply, so a small-but-not-1 pool per
+      // instance is the correct fit here.
+      max: process.env.VERCEL ? 5 : 10,
       // pg's default is 0 (wait forever). If Postgres is ever slow to accept
       // a connection — a cold/paused database, a pooler under load, a network
       // hiccup — this makes it fail fast with a clear error instead of hanging
